@@ -60,20 +60,39 @@ public_users.get("/isbn/:isbn", function (req, res) {
 
   
 // Get book details based on author
+// public_users.get("/author/:author", function (req, res) {
+//   const author = req.params.author;
+//   if (!author) return res.status(404).json({ message: "No author provided." });
+
+//   const booksByAuthor = Object.keys(books)
+//     .map((key) => books[key])
+//     .filter((book) => book.author === author);
+
+//   if (booksByAuthor.length === 0) {
+//     return res.status(404).json({ message: "No books found for this author." });
+//   }
+
+//   res.json(booksByAuthor);
+// });
 public_users.get("/author/:author", function (req, res) {
-  const author = req.params.author;
-  if (!author) return res.status(404).json({ message: "No author provided." });
-
-  const booksByAuthor = Object.keys(books)
-    .map((key) => books[key])
-    .filter((book) => book.author === author);
-
-  if (booksByAuthor.length === 0) {
-    return res.status(404).json({ message: "No books found for this author." });
-  }
-
-  res.json(booksByAuthor);
-});
+    const author = req.params.author;
+    if (!author) return res.status(404).json({ message: "No author provided." });
+  
+    const booksByAuthor = Object.keys(books)
+      .map((key) => books[key])
+      .filter((book) => book.author === author);
+  
+    if (booksByAuthor.length === 0) {
+      return res.status(404).json({ message: "No books found for this author." });
+    }
+  
+    let getBookDetailsByAuthor = new Promise((resolve, reject) => {
+      resolve(JSON.stringify(booksByAuthor, null, 4));
+    });
+    getBookDetailsByAuthor.then((successMessage) => {
+      console.log("From Callback " + successMessage);
+    });
+  });
 
 // Get all books based on title
 public_users.get('/title/:title', (req, res) => {
