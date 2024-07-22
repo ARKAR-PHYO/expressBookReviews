@@ -95,19 +95,37 @@ public_users.get("/author/:author", function (req, res) {
   });
 
 // Get all books based on title
+// public_users.get('/title/:title', (req, res) => {
+//   const title = req.params.title;
+//   if (!title) return res.status(404).json({ message: "No title provided." });
+
+//   // Iterate through the books to find books by the specified title
+//   const booksByTitle = Object.keys(books).map(key => books[key]).filter(book => book.title === title);
+
+//   if (booksByTitle.length === 0) {
+//     return res.status(404).json({ message: "No books found for this title." });
+//   }
+
+//   res.json(booksByTitle);
+// });
 public_users.get('/title/:title', (req, res) => {
-  const title = req.params.title;
-  if (!title) return res.status(404).json({ message: "No title provided." });
+    const title = req.params.title;
+    if (!title) return res.status(404).json({ message: "No title provided." });
+  
+    // Iterate through the books to find books by the specified title
+    const booksByTitle = Object.keys(books).map(key => books[key]).filter(book => book.title === title);
+  
+    if (booksByTitle.length === 0) {
+      return res.status(404).json({ message: "No books found for this title." });
+    }
 
-  // Iterate through the books to find books by the specified title
-  const booksByTitle = Object.keys(books).map(key => books[key]).filter(book => book.title === title);
-
-  if (booksByTitle.length === 0) {
-    return res.status(404).json({ message: "No books found for this title." });
-  }
-
-  res.json(booksByTitle);
-});
+    let getBookDetailsByTitle = new Promise((resolve, reject) => {
+        resolve(JSON.stringify(booksByTitle, null, 4));
+      });
+      getBookDetailsByTitle.then((successMessage) => {
+        console.log("From Callback " + successMessage);
+      });
+  });
 
 //  Get book review
 public_users.get('/review/:isbn', (req, res) => {
